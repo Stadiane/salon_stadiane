@@ -16,7 +16,7 @@ public class HomeController {
     // Page des services
     @GetMapping("/services")
     public String services() {
-        return "screens/services";
+        return "redirect:/list-services"; // Redirection vers la liste des services
     }
 
     // Page de connexion (juste l'affichage, le traitement est ailleurs)

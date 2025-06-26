@@ -15,7 +15,7 @@ public class ServiceController {
     @Autowired
     private ServiceRepository serviceRepository;
 
-    @GetMapping("/services")
+    @GetMapping("/list-services")
     public String afficherServices(Model model) {
         List<Service> services = serviceRepository.findAll();
         model.addAttribute("services", services);
