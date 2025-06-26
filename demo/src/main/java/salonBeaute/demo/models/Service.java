@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "service")
 public class Service {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nom;
     private int duree;
@@ -15,7 +17,7 @@ public class Service {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @OneToMany(mappedBy = "service")
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
     private List<RendezVous> rendezVous;
 
     // Getters & Setters
