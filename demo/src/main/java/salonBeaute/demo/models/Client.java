@@ -3,7 +3,9 @@ package salonBeaute.demo.models;
 import jakarta.persistence.*;
 import java.util.List;
 
+
 @Entity
+@Table(name = "client")
 public class Client {
 
     @Id
@@ -11,8 +13,11 @@ public class Client {
     private Long id;
 
     private String nom;
+    @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
     private String telephone;
+    @Column(nullable = false)
     private String motDePasse;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
