@@ -4,11 +4,13 @@ public class Client {
     private String nom;
     private String telephone;
     private String email;
+    private String motDePasse;
 
-    public Client(String nom, String telephone, String email) {
+    public Client(String nom, String telephone, String email, String motDePasse) {
         this.nom = nom;
         this.telephone = telephone;
         this.email = email;
+        this.motDePasse = motDePasse;
     }
 
     public void afficher() {
@@ -40,13 +42,25 @@ public class Client {
         this.email = email;
     }
 
+    public String getMotDePasse() {
+        return motDePasse;
+    }
+    public void setMotDePasse(String motDePasse) {
+        this.motDePasse = motDePasse;
+    }
+
     // --- Pour sauvegarder dans CSV ---
     public String toCSV() {
-        return nom + ";" + telephone + ";" + email;
+        return nom + ";" + telephone + ";" + email + ";" + motDePasse;
     }
 
     public static Client fromCSV(String line) {
         String[] parts = line.split(";");
-        return new Client(parts[0], parts[1], parts[2]);
+        if (parts.length < 4) {
+            // on met une valeur vide ou par défaut
+            return new Client(parts[0], parts[1], parts[2], "");
+        } else {
+            return new Client(parts[0], parts[1], parts[2], parts[3]);
+        }
     }
 }

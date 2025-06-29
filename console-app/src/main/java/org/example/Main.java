@@ -1,13 +1,69 @@
 package org.example;
 
+import salon.beaute.demo.managers.ClientManager;
 import salon.beaute.demo.managers.ServiceManager;
+import salon.beaute.demo.models.Client;
 import salon.beaute.demo.models.Service;
 
 import java.util.Scanner;
 
 public class Main {
+
+    public static void menuClient(ClientManager clientManager, Scanner scanner) {
+        System.out.println("=== ESPACE CLIENT ===");
+        System.out.println("1. S'inscrire");
+        System.out.println("2. Se connecter");
+        System.out.print("Votre choix : ");
+        int choix = Integer.parseInt(scanner.nextLine());
+
+        switch (choix) {
+            case 1 -> {
+                System.out.print("Nom : ");
+                String nom = scanner.nextLine();
+                System.out.print("Téléphone : ");
+                String tel = scanner.nextLine();
+                System.out.print("Email : ");
+                String email = scanner.nextLine();
+
+                System.out.print("Mot de passe : ");
+                String mdp1 = scanner.nextLine();
+                System.out.print("Confirmer le mot de passe : ");
+                String mdp2 = scanner.nextLine();
+
+                if (!mdp1.equals(mdp2)) {
+                    System.out.println(" Les mots de passe ne correspondent pas. Inscription annulée.");
+                    return;
+                }
+
+                Client nouveau = new Client(nom, tel, email, mdp1);
+                clientManager.ajouterClient(nouveau);
+                System.out.println(" Inscription réussie !");
+            }
+            case 2 -> {
+                System.out.print("Entrez votre email : ");
+                String email = scanner.nextLine();
+                System.out.print("Mot de passe : ");
+                String motDePasse = scanner.nextLine();
+
+                boolean trouve = false;
+                for (Client c : clientManager.getClients()) {
+                    if (c.getNom().equalsIgnoreCase(email) && c.getMotDePasse().equals(motDePasse)) {
+                        System.out.println(" Bienvenue " + c.getNom() + " !");
+                        trouve = true;
+                        break;
+                    }
+                }
+                if (!trouve) {
+                    System.out.println(" Email ou mot de passe incorrect.");
+                }
+            }
+            default -> System.out.println("Choix invalide.");
+        }
+    }
+
     public static void main(String[] args) {
-        ServiceManager manager = new ServiceManager();
+        ServiceManager manager = new ServiceManager(); // le chemin est géré en interne
+        ClientManager clientManager = new ClientManager();
         Scanner scanner = new Scanner(System.in);
         int choix;
 
@@ -17,16 +73,15 @@ public class Main {
             System.out.println("2. Ajouter un service");
             System.out.println("3. Supprimer un service");
             System.out.println("4. Rechercher un service");
+            System.out.println("5. Espace client");
             System.out.println("0. Quitter");
             System.out.print("Votre choix : ");
             choix = scanner.nextInt();
             scanner.nextLine(); // consomme le retour
 
             switch (choix) {
-                case 1:
-                    manager.afficherTous();
-                    break;
-                case 2:
+                case 1 -> manager.afficherTous();
+                case 2 -> {
                     System.out.print("Nom : ");
                     String nom = scanner.nextLine();
                     System.out.print("Description : ");
@@ -42,8 +97,8 @@ public class Main {
                     Service service = new Service(nom, desc, prix, duree, img);
                     manager.ajouter(service);
                     System.out.println(" Service ajouté !");
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     System.out.print("Nom du service à supprimer : ");
                     String nomSuppr = scanner.nextLine();
                     boolean supprime = manager.supprimerParNom(nomSuppr);
@@ -52,8 +107,8 @@ public class Main {
                     } else {
                         System.out.println(" Introuvable.");
                     }
-                    break;
-                case 4:
+                }
+                case 4 -> {
                     System.out.print("Nom du service à rechercher : ");
                     String recherche = scanner.nextLine();
                     Service trouve = manager.chercherParNom(recherche);
@@ -62,12 +117,10 @@ public class Main {
                     } else {
                         System.out.println(" Aucun service trouvé.");
                     }
-                    break;
-                case 0:
-                    System.out.println(" Au revoir !");
-                    break;
-                default:
-                    System.out.println(" Choix invalide.");
+                }
+                case 5 -> menuClient(clientManager, scanner);
+                case 0 -> System.out.println(" Au revoir !");
+                default -> System.out.println(" Choix invalide.");
             }
         } while (choix != 0);
 
