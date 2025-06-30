@@ -65,7 +65,7 @@ public class Main {
         ServiceManager manager = new ServiceManager(); // le chemin est géré en interne
         ClientManager clientManager = new ClientManager();
         Scanner scanner = new Scanner(System.in);
-        int choix;
+        int choix = -1; //initialisation avec une valeur qui ne déclenchera pas la sortie immédiate de la boucle
 
         do {
             System.out.println("\n=== MENU PRINCIPAL ===");
@@ -76,8 +76,12 @@ public class Main {
             System.out.println("5. Espace client");
             System.out.println("0. Quitter");
             System.out.print("Votre choix : ");
-            choix = scanner.nextInt();
-            scanner.nextLine(); // consomme le retour
+            try {
+                choix = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println(" Entrée invalide. Veuillez saisir un nombre.");
+                continue; // revient au menu principal
+            }
 
             switch (choix) {
                 case 1 -> manager.afficherTous();
