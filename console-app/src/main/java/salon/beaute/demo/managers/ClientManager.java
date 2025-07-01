@@ -15,6 +15,13 @@ public class ClientManager {
         chargerClients();
     }
 
+    public Client getClientParNom(String nom) {
+        for (Client c : clients) {
+            if (c.getNom().equalsIgnoreCase(nom)) return c;
+        }
+        return null;
+    }
+
     private void chargerClients() {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String ligne;

@@ -1,6 +1,7 @@
 package org.example;
 
 import salon.beaute.demo.managers.ClientManager;
+import salon.beaute.demo.managers.RendezVousManager;
 import salon.beaute.demo.managers.ServiceManager;
 import salon.beaute.demo.models.Client;
 import salon.beaute.demo.models.Service;
@@ -9,7 +10,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static void menuClient(ClientManager clientManager, Scanner scanner) {
+    public static void menuClient(ClientManager clientManager, Scanner scanner, RendezVousManager rdvManager, ServiceManager serviceManager) {
         System.out.println("=== ESPACE CLIENT ===");
         System.out.println("1. S'inscrire");
         System.out.println("2. Se connecter");
@@ -47,9 +48,28 @@ public class Main {
 
                 boolean trouve = false;
                 for (Client c : clientManager.getClients()) {
-                    if (c.getNom().equalsIgnoreCase(email) && c.getMotDePasse().equals(motDePasse)) {
+                    if (c.getEmail().equalsIgnoreCase(email) && c.getMotDePasse().equals(motDePasse)) {
                         System.out.println(" Bienvenue " + c.getNom() + " !");
                         trouve = true;
+
+                        //Menu pour rdv une fois client connecté
+                        int choixClient;
+                        do {
+                            System.out.println("\n--- MENU CLIENT CONNECTÉ ---");
+                            System.out.println("1. Réserver un rendez-vous");
+                            System.out.println("2. Voir mes rendez-vous");
+                            System.out.println("0. Retour");
+                            System.out.print("Votre choix : ");
+                            choixClient = Integer.parseInt(scanner.nextLine());
+
+                            switch (choixClient) {
+                                case 1 -> rdvManager.reserverRendezVous(c, scanner);
+                                case 2 -> rdvManager.afficherRendezVousPourClient(c);
+                                case 0 -> System.out.println(" Retour au menu principal.");
+                                default -> System.out.println(" Choix invalide.");
+                            }
+                        } while (choixClient != 0);
+
                         break;
                     }
                 }
@@ -64,6 +84,7 @@ public class Main {
     public static void main(String[] args) {
         ServiceManager manager = new ServiceManager(); // le chemin est géré en interne
         ClientManager clientManager = new ClientManager();
+        RendezVousManager rdvManager = new RendezVousManager(clientManager, manager);
         Scanner scanner = new Scanner(System.in);
         int choix = -1; //initialisation avec une valeur qui ne déclenchera pas la sortie immédiate de la boucle
 
@@ -122,7 +143,7 @@ public class Main {
                         System.out.println(" Aucun service trouvé.");
                     }
                 }
-                case 5 -> menuClient(clientManager, scanner);
+                case 5 -> menuClient(clientManager, scanner, rdvManager, manager);
                 case 0 -> System.out.println(" Au revoir !");
                 default -> System.out.println(" Choix invalide.");
             }
