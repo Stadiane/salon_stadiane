@@ -93,4 +93,50 @@ public class RendezVousManager {
             }
         }
     }
+    public void modifierDateRendezVous(Client client, Scanner scanner) {
+        afficherRendezVousPourClient(client);
+        System.out.print("ID du rendez-vous à modifier (ex: RDV001) : ");
+        String id = scanner.nextLine();
+
+        for (RendezVous rdv : rdvs) {
+            if (rdv.getId().toString().equalsIgnoreCase(id) &&
+                    rdv.getClient().getEmail().equals(client.getEmail())) {
+                System.out.print("Nouvelle date (YYYY-MM-DD) : ");
+                String newDateStr = scanner.nextLine();
+                try {
+                    LocalDate newDate = LocalDate.parse(newDateStr);
+                    rdv.setDate(newDate);
+                    sauvegarder();
+                    System.out.println(" Date mise à jour !");
+                } catch (Exception e) {
+                    System.out.println(" Date invalide.");
+                }
+                return;
+            }
+        }
+        System.out.println(" RDV non trouvé.");
+    }
+
+    public void annulerRendezVous(Client client, Scanner scanner) {
+        afficherRendezVousPourClient(client);
+        System.out.print("ID du rendez-vous à annuler (ex: RDV001) : ");
+        String id = scanner.nextLine();
+
+        RendezVous toRemove = null;
+        for (RendezVous rdv : rdvs) {
+            if (rdv.getId().toString().equalsIgnoreCase(id) &&
+                    rdv.getClient().getEmail().equals(client.getEmail())) {
+                toRemove = rdv;
+                break;
+            }
+        }
+
+        if (toRemove != null) {
+            rdvs.remove(toRemove);
+            sauvegarder();
+            System.out.println(" Rendez-vous annulé !");
+        } else {
+            System.out.println(" RDV non trouvé.");
+        }
+    }
 }

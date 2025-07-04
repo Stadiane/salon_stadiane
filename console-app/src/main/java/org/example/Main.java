@@ -58,6 +58,8 @@ public class Main {
                             System.out.println("\n--- MENU CLIENT CONNECTÉ ---");
                             System.out.println("1. Réserver un rendez-vous");
                             System.out.println("2. Voir mes rendez-vous");
+                            System.out.println("3. Modifier la date d’un rendez-vous");
+                            System.out.println("4. Annuler un rendez-vous");
                             System.out.println("0. Retour");
                             System.out.print("Votre choix : ");
                             choixClient = Integer.parseInt(scanner.nextLine());
@@ -65,6 +67,8 @@ public class Main {
                             switch (choixClient) {
                                 case 1 -> rdvManager.reserverRendezVous(c, scanner);
                                 case 2 -> rdvManager.afficherRendezVousPourClient(c);
+                                case 3 -> rdvManager.modifierDateRendezVous(c, scanner);
+                                case 4 -> rdvManager.annulerRendezVous(c, scanner);
                                 case 0 -> System.out.println(" Retour au menu principal.");
                                 default -> System.out.println(" Choix invalide.");
                             }
@@ -82,7 +86,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        ServiceManager manager = new ServiceManager(); // le chemin est géré en interne
+        ServiceManager manager = new ServiceManager();
         ClientManager clientManager = new ClientManager();
         RendezVousManager rdvManager = new RendezVousManager(clientManager, manager);
         Scanner scanner = new Scanner(System.in);
